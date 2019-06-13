@@ -67,6 +67,8 @@ else
 fi
 export RBENV_DIR
 
+export RBENV_SYSTEM_VERSIONS_DIR="${RBENV_SYSTEM_VERSIONS_DIR:-/usr/lib/rbenv/versions}"
+
 
 shopt -s nullglob
 

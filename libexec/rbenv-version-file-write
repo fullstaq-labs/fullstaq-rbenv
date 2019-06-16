@@ -16,4 +16,6 @@ fi
 rbenv-prefix "$RBENV_VERSION" >/dev/null
 
 # Write the version out to disk.
+dir=$(dirname "$RBENV_VERSION_FILE")
+mkdir -p "$dir"
 echo "$RBENV_VERSION" > "$RBENV_VERSION_FILE"

@@ -14,12 +14,14 @@ if [ -e "$VERSION_FILE" ]; then
   if [ "$version" = ".." ] || [[ $version == */* ]]; then
     echo "rbenv: invalid version in \`$VERSION_FILE'" >&2
   elif [ -n "$version" ]; then
-    if [[ "$VERSION_FILE" == *\.ruby-version ]]; then
-      variant_file="${VERSION_FILE/\.ruby-version/.ruby-variant}"
+    variant_file=""
+
+    if [[ "$(basename "$VERSION_FILE")" == ".ruby-version" ]]; then
+      variant_file="$(dirname "$VERSION_FILE")/.ruby-variant"
     fi
 
     if [[ -e "$variant_file" ]]; then
-      variant_words=( $(cut -b 1-1024 "$variant_file") )
+      variant_words=( $(cat "$variant_file") )
       variant="${variant_words[0]}"
 
       if [ -n "$variant" ] && [[ "$version" != *-$variant ]]; then

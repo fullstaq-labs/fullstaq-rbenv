@@ -86,3 +86,25 @@ IN
   run rbenv-version-file-read my-version
   assert_failure "rbenv: invalid version in \`my-version'"
 }
+
+@test "appends text from .ruby-variant file" {
+  echo "2.6.3" > .ruby-version
+  echo "jemalloc" > .ruby-variant
+
+  run rbenv-version-file-read .ruby-version
+  assert_success "2.6.3-jemalloc"
+
+  rm .ruby-variant
+  echo "jemalloc malloctrim" > .ruby-variant
+
+  run rbenv-version-file-read .ruby-version
+  assert_success "2.6.3-jemalloc"
+}
+
+@test "doesnt append .ruby-variant if .ruby-version contains variant" {
+  echo "2.6.3-jemalloc" > .ruby-version
+  echo "jemalloc" > .ruby-variant
+
+  run rbenv-version-file-read .ruby-version
+  assert_success "2.6.3-jemalloc"
+}

@@ -102,6 +102,14 @@ operating system will do the following:
 * Run the shim named `rake`, which in turn passes the command along to
   rbenv
 
+### .ruby-version and .ruby-variant
+
+Typically most projects will commit a `.ruby-version` file to their projects git repository. This causes conflicts when you are using a different variant of Ruby on the server. 
+
+For example, lets say that in development you have not installed fullstaq-rbenv and you have defined `2.6.3` in your `.ruby-version` file. On the server you have installed fullstaq-ruby and only installed `2.6.3-jemalloc`. Rbenv will complain that `2.6.3` is not installed as that is what your `.ruby-version` has defined.
+
+The solution to this is to add a `.ruby-variant` file to your project. For example if you are using the jemalloc variant simply put `jemalloc` in this file. Only when you are using fullstaq-rbenv will it combine the contents of `.ruby-version` and `.ruby-variant` to a single version string, ie. `2.6.3-jemalloc`.
+
 ### Choosing the Ruby Version
 
 When you execute a shim, rbenv determines which Ruby version to use by

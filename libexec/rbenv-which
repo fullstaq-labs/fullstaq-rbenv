@@ -60,7 +60,10 @@ for RBENV_COMMAND_PATH in "${RBENV_COMMAND_PATHS[@]}"; do
   fi
 done
 
-if [ "$RBENV_VERSION" != "system" ] && [ ! -d "${RBENV_ROOT}/versions/${RBENV_VERSION}" ]; then
+if [ "$RBENV_VERSION" != "system" ] && \
+  [ ! -d "${RBENV_ROOT}/versions/${RBENV_VERSION}" ] && \
+  [[ -z "$RBENV_SYSTEM_VERSIONS_DIR" || ! -d "${RBENV_SYSTEM_VERSIONS_DIR}/${RBENV_VERSION}" ]]
+then
   echo "rbenv: version \`$RBENV_VERSION' is not installed (set by $(rbenv-version-origin))" >&2
   exit 1
 else

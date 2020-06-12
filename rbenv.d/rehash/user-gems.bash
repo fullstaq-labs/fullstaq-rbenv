@@ -1,4 +1,11 @@
-list_gem_dirs() {
+# This plugin lists all available gem commands for the current user
+# and creates shims for these commands.
+# It works by iterating over all installed version and gathering the list
+# of executables. For each gem path of the installed Ruby version,
+# we ask Rubygems for the corresponding bin path. For each bin path
+# we list the executable files.
+
+list_executable_names() {
   local version file
   local -a version_dirs
   rbenv-versions --bare --skip-aliases | \
@@ -10,13 +17,11 @@ list_gem_dirs() {
     for version_dir in "${version_dirs[@]}"; do
       gem="${version_dir}/bin/gem"
       if [ -x "$gem" ]; then
-        OLDIFS="$IFS"
-        IFS=':' gempaths=(`$gem environment gempath`)
-        IFS="$OLDIFS"
-        for gempath in "${gempaths[@]}"; do
-          bindir="${gempath}/bin"
+        "${version_dir}/bin/ruby" -e \
+          'puts Gem.path.map(&Gem.method(:bindir)).join("\n")' 2>/dev/null | \
+        while read -r bindir; do
           for file in "${bindir}/"*; do
-            echo -n "${file##*/} "
+            [ -x "$file" ] && echo "${file##*/}"
           done
         done
       fi
@@ -24,6 +29,4 @@ list_gem_dirs() {
   done
 }
 
-binstubs="`list_gem_dirs | sort -u`"
-
-make_shims $binstubs
+make_shims $(list_executable_names | sort -u)

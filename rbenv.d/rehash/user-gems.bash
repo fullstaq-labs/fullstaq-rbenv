@@ -18,7 +18,7 @@ list_executable_names() {
       gem="${version_dir}/bin/gem"
       if [ -x "$gem" ]; then
         "${version_dir}/bin/ruby" -e \
-          'puts Gem.path.map(&Gem.method(:bindir)).join("\n")' 2>/dev/null | \
+          'puts (Gem.path.map(&Gem.method(:bindir)) - [Gem.default_bindir]).join("\n")' 2>/dev/null | \
         while read -r bindir; do
           for file in "${bindir}/"*; do
             [ -x "$file" ] && echo "${file##*/}"

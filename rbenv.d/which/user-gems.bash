@@ -2,7 +2,7 @@
 list_gem_bindirs() {
   local ruby="$1"
   "$ruby" -e \
-          'puts Gem.path.map(&Gem.method(:bindir)).join("\n")' 2>/dev/null || true
+          'puts (Gem.path.map(&Gem.method(:bindir)) - [Gem.default_bindir]).join("\n")' 2>/dev/null || true
 }
 
 if [ "$RBENV_VERSION" == "system" ]; then
